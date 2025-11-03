@@ -1,0 +1,46 @@
+# Tâches pour cloner, builder et déployer l'application Angular (le code source est supprimé après le build pour la sécurité)
+---
+- name: Create application directory
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    
+- name: Clone Angular application repository
+  git:
+    repo: "{{ repo_url }}"
+    dest: "{{ app_dir }}"
+    version: main
+    force: yes
+    
+- name: Install npm dependencies
+  npm:
+    path: "{{ app_dir }}"
+    
+- name: Build Angular application
+  command: npm run build
+  args:
+    chdir: "{{ app_dir }}"
+    
+- name: Create web root directory
+  file:
+    path: "{{ web_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    
+- name: Copy website files to the server's document root
+  copy:
+    src: "{{ app_dir }}/dist/{{ app_name }}/"
+    dest: "{{ web_root }}/"
+    owner: www-data
+    group: www-data
+    remote_src: yes
+  notify: Restart Nginx
+
+- name: Remove source code and build artifacts for security
+  file:
+    path: "{{ app_dir }}"
+    state: absent
+

@@ -1,0 +1,13 @@
+# Template Jinja2: configuration Nginx pour servir l'application Angular en mode SPA (Single Page Application)
+server {
+    listen 80;
+    server_name _;
+    
+    root {{ web_root }};
+    index index.html;
+    
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+

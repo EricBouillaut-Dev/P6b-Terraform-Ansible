@@ -1,0 +1,36 @@
+# Tâches pour installer et configurer Nginx comme serveur web pour l'application Angular
+---
+- name: Update apt cache and install Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+    
+- name: Ensure Nginx is started and enabled
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+    
+- name: Apply Nginx template
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/{{ app_name }}
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Nginx
+  
+- name: Enable new site
+  file:
+    src: /etc/nginx/sites-available/{{ app_name }}
+    dest: /etc/nginx/sites-enabled/{{ app_name }}
+    state: link
+  notify: Restart Nginx
+  
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Restart Nginx
+

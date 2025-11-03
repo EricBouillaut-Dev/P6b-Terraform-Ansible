@@ -1,0 +1,23 @@
+# Playbook principal : orchestre le déploiement de l'application Angular avec Nginx sur le serveur cible
+---
+- name: Deploy Angular Application with Nginx
+  hosts: vms
+  become: yes
+  
+  vars:
+    app_name: "olympic-games-starter"
+    repo_url: "https://github.com/OpenClassrooms-Student-Center/G-rez-l-int-gration-continue-avec-Git-et-scripts-Application-Angular.git"
+    app_dir: "/opt/{{ app_name }}"
+    web_root: "/var/www/{{ app_name }}"
+    
+  handlers:
+    - name: Restart Nginx
+      systemd:
+        name: nginx
+        state: restarted
+    
+  roles:
+    - role: nodejs
+    - role: angular-app
+    - role: nginx
+

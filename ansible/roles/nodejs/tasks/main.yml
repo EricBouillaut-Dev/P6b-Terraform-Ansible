@@ -1,0 +1,17 @@
+# Tâches pour installer Node.js et npm nécessaires pour builder l'application Angular
+---
+- name: Install dependencies for Node.js
+  apt:
+    name:
+      - curl
+      - git
+    state: present
+    update_cache: yes
+    
+- name: Install Node.js using NodeSource
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+    apt-get install -y nodejs
+  args:
+    creates: /usr/bin/node
+
