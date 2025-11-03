@@ -1,0 +1,19 @@
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfplan
+
+# Cloud-init généré
+share/cloud-init/cloud-init.img
+
+# Fichiers temporaires
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Variables sensibles (si vous en avez)
+*.tfvars
+secrets.auto.tfvars
